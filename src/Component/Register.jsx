@@ -1,10 +1,21 @@
+import { createUserWithEmailAndPassword } from "firebase/auth";
 import React from "react";
+import { auth } from "../firebase.init";
 
 export default function Register() {
     const handleRegister = e =>{
         e.preventDefault();
-        console.log(e.target.email.value);
-        console.log(e.target.password.value);
+        const email = e.target.email.value;
+        const password = e.target.password.value;
+
+        // create user
+        createUserWithEmailAndPassword(auth, email,password)
+        .then(result =>{
+          console.log(result.user);
+        })
+        .catch(error=>{
+          console.log('Error khaisi', error);
+        })
     }
   return (
     <div className="my-8 w-6/12 mx-auto">
@@ -35,7 +46,7 @@ export default function Register() {
               clipRule="evenodd"
             />
           </svg>
-          <input type="password" name="password" className="grow" value="password" />
+          <input type="password" name="password" className="grow" placeholder="Password"/>
         </label>
         <button className="btn btn-neutral btn-wide">Login</button>
       </form>
