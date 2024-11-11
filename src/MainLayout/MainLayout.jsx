@@ -5,7 +5,7 @@ import Header from '../Component/header'
 
 export default function MainLayout () {
   return (
-    <div>
+    <div className='max-w-screen-lg mx-auto'>
         <Header></Header>
         <Outlet></Outlet>
       
