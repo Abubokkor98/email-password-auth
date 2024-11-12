@@ -1,11 +1,12 @@
-import { signInWithEmailAndPassword } from "firebase/auth";
-import React, { useState } from "react";
+import { sendPasswordResetEmail, signInWithEmailAndPassword } from "firebase/auth";
+import React, { useRef, useState } from "react";
 import { auth } from "../firebase.init";
 import { Link } from "react-router-dom";
 
 export default function Login() {
   const [errorMessage, setErrorMessage] = useState("");
   const [success, setSuccess] = useState(false);
+  const emailRef = useRef();
 
   const handleLogin = (e) => {
     e.preventDefault();
@@ -21,12 +22,31 @@ export default function Login() {
     signInWithEmailAndPassword(auth, email, password)
       .then((result) => {
         console.log(result.user);
-        setSuccess(true);
+
+        if (!result.user.emailVerified) {
+          setErrorMessage("Please verify your email");
+        } else {
+          setSuccess(true);
+        }
       })
       .catch((error) => {
         console.log("ERROR", error.message);
         setErrorMessage(error.message);
       });
+  };
+
+  const handleForgetPassword = () => {
+    console.log("get me faking email", emailRef.current.value);
+    const email = emailRef.current.value;
+    if(!email){
+      alert('provide a valid email')
+    }
+    else{
+      sendPasswordResetEmail(auth, email)
+      .then(()=>{
+        alert("password reset email send, check ur email")
+      })
+    }
   };
 
   return (
@@ -48,8 +68,9 @@ export default function Login() {
               </label>
               <input
                 type="email"
-                placeholder="email"
                 name="email"
+                ref={emailRef}
+                placeholder="email"
                 className="input input-bordered"
                 required
               />
@@ -65,7 +86,7 @@ export default function Login() {
                 className="input input-bordered"
                 required
               />
-              <label className="label">
+              <label onClick={handleForgetPassword} className="label">
                 <a href="#" className="label-text-alt link link-hover">
                   Forgot password?
                 </a>
@@ -73,14 +94,13 @@ export default function Login() {
             </div>
             <div className="form-control mt-6">
               <button className="btn btn-primary">Login</button>
-              
             </div>
           </form>
           {errorMessage && <p className="text-red-700">{errorMessage}</p>}
-              {success && (
-                <p className="text-green-700">User Login Successfully</p>
-              )}
-              <p>New to this Website? Please <Link to={'/sign-up'}>sign-Up</Link></p>
+          {success && <p className="text-green-700">User Login Successfully</p>}
+          <p>
+            New to this Website? Please <Link to={"/sign-up"}>sign-Up</Link>
+          </p>
         </div>
       </div>
     </div>
