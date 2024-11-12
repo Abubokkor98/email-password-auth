@@ -14,7 +14,7 @@ export default function Header() {
         <NavLink to={"/register"}>Register</NavLink>
       </li>
       <li>
-        <NavLink to={"/register2"}>Register 2</NavLink>
+        <NavLink to={"/sign-up"}>SignUp</NavLink>
       </li>
     </>
   );
